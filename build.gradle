@@ -1,0 +1,37 @@
+plugins {
+    id 'java'
+    id 'eclipse'
+    id 'idea'
+    id "org.springframework.boot" version "1.5.4.RELEASE"
+}
+
+
+jar {
+    baseName = 'uranus-fds'
+    version =  '0.0.1'
+}
+
+repositories {
+    maven {url 'http://maven.aliyun.com/nexus/content/repositories/central/'}
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    // boot starter
+    compile("org.springframework.boot:spring-boot-starter-web")
+
+    // Active MQ
+    compile("org.springframework.boot:spring-boot-starter-activemq")
+    compile("org.apache.activemq:activemq-broker")
+    compile("com.fasterxml.jackson.dataformat:jackson-dataformat-xml")
+
+    // JPA Data (We are going to use Repositories, Entities, Hibernate, etc...)
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // Use MySQL Connector-J
+    compile 'mysql:mysql-connector-java'
+
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+}
