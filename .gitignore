@@ -29,7 +29,6 @@ hs_err_pid*
 # gradle files
 .gradle
 build
-gradle
 out
 
 # ellipse files
