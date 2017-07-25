@@ -16,15 +16,7 @@ public class Application {
 
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(Application.class, args);
-
-//        FlightRawMsg flightRawMsg = new FlightRawMsg();
-//        FlowcontrolRawMsg flowcontrolRawMsg = new FlowcontrolRawMsg();
-//
-//        FlightRawMsgRepo flightRawMsgRepo = context.getBean(FlightRawMsgRepo.class);
-//        FlowcontrolRawMsgRepo flowcontrolRawMsgRepo = context.getBean(FlowcontrolRawMsgRepo.class);
-//
-//        flightRawMsgRepo.save(flightRawMsg);
-//        flowcontrolRawMsgRepo.save(flowcontrolRawMsg);
+        
     }
 
 }
