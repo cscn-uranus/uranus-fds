@@ -1,19 +1,19 @@
 plugins {
-    id 'java'
-    id 'eclipse'
-    id 'idea'
-    id 'war'
+    id "java"
+    id "eclipse"
+    id "idea"
+    id "war"
     id "org.springframework.boot" version "1.5.4.RELEASE"
 }
 
 
-jar {
-    baseName = 'uranus-fds-api'
-    version =  '0.0.1'
+war {
+    baseName = "uranus-fds-api"
+    version =  "0.0.1"
 }
 
 repositories {
-    maven {url 'http://maven.aliyun.com/nexus/content/repositories/central/'}
+    maven {url "http://maven.aliyun.com/nexus/content/repositories/central/"}
 }
 
 sourceCompatibility = 1.8
@@ -22,19 +22,20 @@ targetCompatibility = 1.8
 dependencies {
     // boot starter
     compile("org.springframework.boot:spring-boot-starter-web")
-    compile "org.springframework.boot:spring-boot-starter-actuator"
+    compile("org.springframework.boot:spring-boot-starter-actuator")
+    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 
     // Active MQ
     compile("org.springframework.boot:spring-boot-starter-activemq")
     compile("org.apache.activemq:activemq-broker")
-    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-xml"
+    compile("com.fasterxml.jackson.dataformat:jackson-dataformat-xml")
 
 
     // JPA Data (We are going to use Repositories, Entities, Hibernate, etc...)
-    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile("org.springframework.boot:spring-boot-starter-data-jpa")
 
     // Use MySQL Connector-J
-    compile 'mysql:mysql-connector-java'
+    compile("mysql:mysql-connector-java")
 
-    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile("org.springframework.boot:spring-boot-starter-test")
 }
