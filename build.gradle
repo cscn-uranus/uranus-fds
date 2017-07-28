@@ -7,7 +7,7 @@ plugins {
 
 
 jar {
-    baseName = 'uranus-fds'
+    baseName = 'uranus-fds-api'
     version =  '0.0.1'
 }
 
@@ -21,11 +21,13 @@ targetCompatibility = 1.8
 dependencies {
     // boot starter
     compile("org.springframework.boot:spring-boot-starter-web")
+    compile "org.springframework.boot:spring-boot-starter-actuator"
 
     // Active MQ
     compile("org.springframework.boot:spring-boot-starter-activemq")
     compile("org.apache.activemq:activemq-broker")
-    compile("com.fasterxml.jackson.dataformat:jackson-dataformat-xml")
+    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-xml"
+
 
     // JPA Data (We are going to use Repositories, Entities, Hibernate, etc...)
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'

@@ -10,16 +10,20 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.jms.Destination;
-import java.util.List;
+import javax.transaction.Transactional;
 
 @Service
 public class FlowcontrolMsgProducer {
 
     private final FdsConfigRepo fdsConfigRepo;
     private final FlowcontrolRawMsgRepo flowcontrolRawMsgRepo;
+    private FdsConfig flowcontrolRawMsgLengthConfig;
+    private FdsConfig flowcontrolRawMsgIndexConfig;
     private long flowcontrolRawMsgLength;
+    private long flowcontrolRawMsgIndex;
     private final JmsTemplate jmsTemplate;
-    Destination destination = new ActiveMQQueue("CENTER2REGION.TEST.FLIGHTS.QUEUE");
+    Destination destination = new ActiveMQQueue("CENTER2REGION.TEST.FLOWCONTROLS.QUEUE");
+
 
 
     @Autowired
@@ -28,20 +32,34 @@ public class FlowcontrolMsgProducer {
         this.flowcontrolRawMsgRepo = flowcontrolRawMsgRepo;
         this.jmsTemplate = jmsTemplate;
 
-        List<FdsConfig> fdsConfig = this.fdsConfigRepo.findByCode("FlowcontrolMsgLength");
+        this.flowcontrolRawMsgLengthConfig = this.fdsConfigRepo.findByCode("FlowcontrolRawMsgLength").get(0);
+        this.flowcontrolRawMsgLength = Long.parseLong(flowcontrolRawMsgLengthConfig.getValue());
+
+        this.flowcontrolRawMsgIndexConfig = this.fdsConfigRepo.findByCode("FlowcontrolRawMsgIndex").get(0);
+        this.flowcontrolRawMsgIndex = Long.parseLong(flowcontrolRawMsgIndexConfig.getValue());
     }
     // 发送消息，destination是发送到的队列，message是待发送的消息
     private void sendMessage(Destination destination, final String message) {
         jmsTemplate.convertAndSend(destination, message);
     }
 
-    private void getNextFlowcontrolRawMsg() {
-//        FdsConfig fdsConfig = this.fdsConfigRepo.findByCode("");
+    @Transactional
+    public String getNextFlowcontrolRawMsg() {
+        String flowcontrolRawMsg = this.flowcontrolRawMsgRepo.findOne(this.flowcontrolRawMsgIndex).getXmlContent();
+        if (this.flowcontrolRawMsgIndex < this.flowcontrolRawMsgLength) {
+            this.flowcontrolRawMsgIndex += 1;
+        } else {
+            this.flowcontrolRawMsgIndex = 1;
+        }
+        this.flowcontrolRawMsgIndexConfig.setValue(String.valueOf(this.flowcontrolRawMsgIndex));
+        this.fdsConfigRepo.save(flowcontrolRawMsgIndexConfig);
+        return flowcontrolRawMsg;
     }
 
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = 1000)
     public void produceMessage() {
-
+        String flowcontrolRawMsg = this.getNextFlowcontrolRawMsg();
+        this.sendMessage(this.destination, flowcontrolRawMsg);
     }
 }
 
