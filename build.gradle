@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'eclipse'
     id 'idea'
+    id 'war'
     id "org.springframework.boot" version "1.5.4.RELEASE"
 }
 
