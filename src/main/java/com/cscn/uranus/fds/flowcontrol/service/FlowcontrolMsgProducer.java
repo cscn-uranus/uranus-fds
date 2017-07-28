@@ -56,7 +56,7 @@ public class FlowcontrolMsgProducer {
         return flowcontrolRawMsg;
     }
 
-    @Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 300000)
     public void produceMessage() {
         String flowcontrolRawMsg = this.getNextFlowcontrolRawMsg();
         this.sendMessage(this.destination, flowcontrolRawMsg);

@@ -57,7 +57,7 @@ public class FlightMsgProducer {
         return  flightRawMsg;
     }
 
-    @Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 300000)
     public void produceMessage() {
         String flightRawMsg = this.getNextFlightRawMsg();
         this.sendMessage(this.destination, flightRawMsg);
