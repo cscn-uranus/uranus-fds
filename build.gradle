@@ -3,9 +3,9 @@ plugins {
     id "eclipse"
     id "idea"
     id "war"
-    id "org.springframework.boot" version "1.5.4.RELEASE"
-}
+    id "org.springframework.boot" version "1.5.6.RELEASE"
 
+}
 
 war {
     baseName = "uranus-fds-api"
@@ -13,7 +13,7 @@ war {
 }
 
 repositories {
-    maven {url "http://maven.aliyun.com/nexus/content/repositories/central/"}
+    jcenter()
 }
 
 sourceCompatibility = 1.8
