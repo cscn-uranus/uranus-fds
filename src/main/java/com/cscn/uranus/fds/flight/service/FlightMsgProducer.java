@@ -42,11 +42,12 @@ public class FlightMsgProducer {
         return flightRawMsg;
     }
 
-    @Scheduled(fixedRate = 300000)
+    @Scheduled(initialDelay = 600000 ,fixedRate = 300000)
     public void produceMessage() {
         if (this.flightRawMsgIndex > this.flightRawMsgLength) {
             this.init();
         }
+
         String flightRawMsg = this.getNextFlightRawMsg();
         amqManager.sendXmlMsg(this.destination, flightRawMsg);
 

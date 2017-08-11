@@ -24,11 +24,6 @@ public class FlowcontrolMsgProducerTest {
     @Autowired
     private AmqManager amqManager;
 
-    @Before
-    public void init() throws Exception {
-        this.flowcontrolMsgProducer.init();
-    }
-
     @After
     public void destroy() throws Exception {
         this.flowcontrolMsgProducer.init();
@@ -44,6 +39,16 @@ public class FlowcontrolMsgProducerTest {
 
     @Test
     public void multipleMessageProduced() throws Exception {
+        for (int i = 0; i < 120; i++) {
+            this.flowcontrolMsgProducer.produceMessage();
+        }
+        assertEquals("Queue length should be 120",
+                120,
+                this.amqManager.getQueueSize(QUEUE_NAME));
+    }
+
+    @Test
+    public void thresholdMessageProduced() throws Exception {
         for (int i = 0; i < 350; i++) {
             this.flowcontrolMsgProducer.produceMessage();
         }

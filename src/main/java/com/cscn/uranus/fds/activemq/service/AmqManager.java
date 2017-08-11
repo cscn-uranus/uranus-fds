@@ -1,7 +1,9 @@
 package com.cscn.uranus.fds.activemq.service;
 
+import com.cscn.uranus.fds.FdsProperties;
 import org.apache.activemq.broker.jmx.BrokerViewMBean;
 import org.apache.activemq.broker.jmx.QueueViewMBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +20,8 @@ import java.util.Map;
 @Service
 public class AmqManager {
 
-    private final String jmxUrlString = "service:jmx:rmi:///jndi/rmi://dev-rhel.cscn.net:1099/jmxrmi";
+    private final FdsProperties fdsProperties;
+    private String jmxUrlString;
     private final String[] jmxCredential = {"admin", "admin"};
     private final JmsTemplate jmsTemplate;
     private Map<String, String[]> jmxEnvironment = new HashMap<>();
@@ -28,7 +31,9 @@ public class AmqManager {
     private ObjectName amqInstance;
     private BrokerViewMBean brokerViewMBean;
 
-    public AmqManager(JmsTemplate jmsTemplate) {
+    @Autowired
+    public AmqManager(FdsProperties fdsProperties, JmsTemplate jmsTemplate) {
+        this.fdsProperties = fdsProperties;
         this.jmsTemplate = jmsTemplate;
 
         this.initJmxConnection();
@@ -41,6 +46,7 @@ public class AmqManager {
 
     private void initJmxConnection() {
         try {
+            this.jmxUrlString = "service:jmx:rmi:///jndi/rmi://" + this.fdsProperties.getHost() + ":1099/jmxrmi";
             this.jmxServiceURL = new JMXServiceURL(this.jmxUrlString);
             this.jmxEnvironment.put(JMXConnector.CREDENTIALS, this.jmxCredential);
 
@@ -63,7 +69,7 @@ public class AmqManager {
 
     private QueueViewMBean getQueue(String queueName) {
         QueueViewMBean queueViewMBean = null;
-        for (ObjectName name: this.brokerViewMBean.getQueues()) {
+        for (ObjectName name : this.brokerViewMBean.getQueues()) {
             QueueViewMBean queueItem = MBeanServerInvocationHandler.newProxyInstance(this.mBeanServerConnection, name, QueueViewMBean.class, true);
             if (queueItem.getName().equals(queueName)) {
                 queueViewMBean = queueItem;
@@ -71,6 +77,7 @@ public class AmqManager {
         }
         return queueViewMBean;
     }
+
     public long getQueueSize(String queueName) {
         return this.getQueue(queueName).getQueueSize();
     }

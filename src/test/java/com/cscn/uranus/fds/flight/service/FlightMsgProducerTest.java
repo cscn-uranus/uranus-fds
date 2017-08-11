@@ -23,11 +23,6 @@ public class FlightMsgProducerTest {
     @Autowired
     private AmqManager amqManager;
 
-    @Before
-    public void init() throws Exception {
-        this.flightMsgProducer.init();
-    }
-
     @After
     public void destroy() throws Exception {
         this.flightMsgProducer.init();
@@ -43,6 +38,16 @@ public class FlightMsgProducerTest {
 
     @Test
     public void multipleMessageProduced() throws Exception {
+        for (int i = 0; i < 120; i++) {
+            this.flightMsgProducer.produceMessage();
+        }
+        assertEquals("Queue length should be 120",
+                120,
+                this.amqManager.getQueueSize(QUEUE_NAME));
+    }
+
+    @Test
+    public void thresholdMessageProduced() throws Exception {
         for (int i = 0; i < 350; i++) {
             this.flightMsgProducer.produceMessage();
         }

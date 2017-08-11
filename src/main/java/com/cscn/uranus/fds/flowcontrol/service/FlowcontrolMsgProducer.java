@@ -43,7 +43,7 @@ public class FlowcontrolMsgProducer {
         return flowcontrolRawMsg;
     }
 
-    @Scheduled(fixedRate = 300000)
+    @Scheduled(initialDelay = 600000 ,fixedRate = 300000)
     public void produceMessage() {
         if (this.flowcontrolRawMsgIndex > this.flowcontrolRawMsgLength) {
             this.init();
