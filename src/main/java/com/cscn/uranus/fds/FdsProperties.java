@@ -2,9 +2,11 @@ package com.cscn.uranus.fds;
 
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
+@EnableConfigurationProperties
 @ConfigurationProperties(prefix = "uranus.fds")
 public class FdsProperties {
     private String host;
