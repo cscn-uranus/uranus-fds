@@ -17,12 +17,26 @@ apply plugin: "idea"
 apply plugin: "org.springframework.boot"
 apply plugin: "cn.bestwu.propdeps"
 
+//applicationDefaultJvmArgs = [
+//        "-Dspring.profiles.active=${project.gradle.startParameter.systemPropertiesArgs['spring.profiles.active']}"
+//]
+
+//task local(type: bootRun)  {
+//    bootRun.systemProperty 'spring.profiles.active', 'local'
+//}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.1'
+}
+
+task startActiveMQ(type: Exec) {
+    workingDir 'c:\\activemq\\bin'
+    commandLine 'cmd', '/c', 'activemq.bat' ,'start'
+}
+
 war {
     baseName = "uranus-fds-api"
     version = "0.0.1"
-}
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.1'
 }
 
 jar {
