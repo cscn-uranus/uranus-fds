@@ -45,6 +45,9 @@ jacocoTestReport {
     }
 }
 
+
+"GRANT ALL PRIVILEGES ON %s.* TO '%s'@'localhost' IDENTIFIED BY '%s'";
+
 repositories {
     jcenter()
 }
