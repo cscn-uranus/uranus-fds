@@ -17,7 +17,7 @@ apply plugin: "war"
 apply plugin: "idea"
 apply plugin: "org.springframework.boot"
 apply plugin: "cn.bestwu.propdeps"
-//apply plugin: "jacoco"
+apply plugin: "jacoco"
 
 war {
     baseName = "uranus-fds-api"
@@ -29,17 +29,16 @@ jar {
     version = "0.0.1"
 }
 
-//jacoco {
-//    reportsDir = file("$buildDir/jacoco/report")
-//}
-//jacocoTestReport {
-//    reports {
-//        xml.enabled = true
-//        csv.enabled = false
-//        html.setDestination(file("${buildDir}/jacoco/html"))
-//    }
-//}
 
+jacoco {
+    reportsDir = file("$buildDir/jacoco/report")
+}
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        csv.enabled = false
+    }
+}
 
 repositories {
     jcenter()
