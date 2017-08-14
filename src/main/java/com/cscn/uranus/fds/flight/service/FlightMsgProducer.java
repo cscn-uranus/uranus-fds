@@ -1,13 +1,10 @@
 package com.cscn.uranus.fds.flight.service;
 
-import com.cscn.uranus.fds.config.entity.FdsConfig;
-import com.cscn.uranus.fds.config.repo.FdsConfigRepo;
-import com.cscn.uranus.fds.flight.entity.FlightRawMsg;
+import com.cscn.uranus.fds.activemq.service.AmqManager;
+import com.cscn.uranus.fds.config.service.FdsConfigManager;
 import com.cscn.uranus.fds.flight.repo.FlightRawMsgRepo;
-import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jms.core.JmsTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -17,49 +14,58 @@ import javax.transaction.Transactional;
 @Service
 public class FlightMsgProducer {
 
-    private final FdsConfigRepo fdsConfigRepo;
+    private final FdsConfigManager fdsConfigManager;
     private final FlightRawMsgRepo flightRawMsgRepo;
-    private FdsConfig flightRawMsgLengthConfig;
-    private FdsConfig flightRawMsgIndexConfig;
+    private static final String QUEUE_NAME = "CENTER2REGION.TEST.FLIGHTS.QUEUE";
+
+    private final AmqManager amqManager;
     private long flightRawMsgLength;
     private long flightRawMsgIndex;
-    private final JmsTemplate jmsTemplate;
-    Destination destination = new ActiveMQQueue("CENTER2REGION.TEST.FLIGHTS.QUEUE");
+
+
+    private Destination destination = new ActiveMQQueue(QUEUE_NAME);
 
     @Autowired
-    public FlightMsgProducer(FdsConfigRepo fdsConfigRepo, FlightRawMsgRepo flightRawMsgRepo, JmsTemplate jmsTemplate) {
-        this.fdsConfigRepo = fdsConfigRepo;
+    public FlightMsgProducer(FdsConfigManager fdsConfigManager, AmqManager amqManager, FlightRawMsgRepo flightRawMsgRepo) {
+        this.fdsConfigManager = fdsConfigManager;
+        this.amqManager = amqManager;
         this.flightRawMsgRepo = flightRawMsgRepo;
-        this.jmsTemplate = jmsTemplate;
 
-        this.flightRawMsgLengthConfig = this.fdsConfigRepo.findByCode("FlightRawMsgLength").get(0);
-        this.flightRawMsgLength = Long.parseLong(flightRawMsgLengthConfig.getValue());
-
-
-        this.flightRawMsgIndexConfig = this.fdsConfigRepo.findByCode("FlightRawMsgIndex").get(0);
-        this.flightRawMsgIndex = Long.parseLong(flightRawMsgIndexConfig.getValue());
-    }
-
-    private void sendMessage(Destination destination, final String message) {
-        jmsTemplate.convertAndSend(destination, message);
+        this.init();
     }
 
     @Transactional
     public String getNextFlightRawMsg() {
         String flightRawMsg = this.flightRawMsgRepo.findOne(this.flightRawMsgIndex).getXmlContent();
-        if (this.flightRawMsgIndex < this.flightRawMsgLength) {
-            this.flightRawMsgIndex += 1;
-        } else {
-            this.flightRawMsgIndex = 1;
-        }
-        this.flightRawMsgIndexConfig.setValue(String.valueOf(this.flightRawMsgIndex));
-        this.fdsConfigRepo.save(flightRawMsgIndexConfig);
-        return  flightRawMsg;
+        this.flightRawMsgIndex += 1;
+        this.fdsConfigManager.setFlightRawMsgIndex(this.flightRawMsgIndex);
+        return flightRawMsg;
     }
 
-    @Scheduled(fixedRate = 300000)
+    @Scheduled(initialDelay = 600000 ,fixedRate = 300000)
     public void produceMessage() {
+        if (this.flightRawMsgIndex > this.flightRawMsgLength) {
+            this.init();
+        }
+
         String flightRawMsg = this.getNextFlightRawMsg();
-        this.sendMessage(this.destination, flightRawMsg);
+        amqManager.sendXmlMsg(this.destination, flightRawMsg);
+
+    }
+
+    void init() {
+        this.initLengthConfig();
+        this.initIndexConfig();
+        this.amqManager.deleteQueue(QUEUE_NAME);
+    }
+
+    private void initLengthConfig() {
+        this.flightRawMsgLength = 350;
+        this.fdsConfigManager.setFlightRawMsgLength(this.flightRawMsgLength);
+    }
+
+    private void initIndexConfig() {
+        this.flightRawMsgIndex = 1;
+        this.fdsConfigManager.setFlightRawMsgIndex(this.flightRawMsgIndex);
     }
 }
