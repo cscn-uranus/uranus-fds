@@ -1,6 +1,6 @@
 package com.cscn.uranus.fds.flowcontrol.service;
 
-import com.cscn.uranus.fds.activemq.service.AmqManager;
+import com.cscn.uranus.fds.external.data.provider.AmqManager;
 import com.cscn.uranus.fds.config.service.FdsConfigManager;
 import com.cscn.uranus.fds.flowcontrol.repo.FlowcontrolRawMsgRepo;
 import org.apache.activemq.command.ActiveMQQueue;

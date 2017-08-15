@@ -1,4 +1,4 @@
-package com.cscn.uranus.fds.activemq.service;
+package com.cscn.uranus.fds.external.data.provider;
 
 import com.cscn.uranus.fds.FdsProperties;
 import org.apache.activemq.broker.jmx.BrokerViewMBean;

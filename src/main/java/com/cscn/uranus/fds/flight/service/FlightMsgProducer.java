@@ -1,6 +1,6 @@
 package com.cscn.uranus.fds.flight.service;
 
-import com.cscn.uranus.fds.activemq.service.AmqManager;
+import com.cscn.uranus.fds.external.data.provider.AmqManager;
 import com.cscn.uranus.fds.config.service.FdsConfigManager;
 import com.cscn.uranus.fds.flight.repo.FlightRawMsgRepo;
 import org.apache.activemq.command.ActiveMQQueue;
