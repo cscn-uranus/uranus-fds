@@ -1,65 +1,72 @@
 package com.cscn.uranus.fds.flowcontrol.service;
 
-import com.cscn.uranus.fds.config.entity.FdsConfig;
-import com.cscn.uranus.fds.config.repo.FdsConfigRepo;
+import com.cscn.uranus.fds.external.data.provider.AmqManager;
+import com.cscn.uranus.fds.config.service.FdsConfigManager;
 import com.cscn.uranus.fds.flowcontrol.repo.FlowcontrolRawMsgRepo;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jms.core.JmsTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.jms.Destination;
-import javax.transaction.Transactional;
 
 @Service
 public class FlowcontrolMsgProducer {
 
-    private final FdsConfigRepo fdsConfigRepo;
+    private final FdsConfigManager fdsConfigManager;
     private final FlowcontrolRawMsgRepo flowcontrolRawMsgRepo;
-    private FdsConfig flowcontrolRawMsgLengthConfig;
-    private FdsConfig flowcontrolRawMsgIndexConfig;
     private long flowcontrolRawMsgLength;
     private long flowcontrolRawMsgIndex;
-    private final JmsTemplate jmsTemplate;
-    Destination destination = new ActiveMQQueue("CENTER2REGION.TEST.FLOWCONTROLS.QUEUE");
 
+    private final AmqManager amqManager;
+
+    private static final String QUEUE_NAME = "CENTER2REGION.TEST.FLOWCONTROLS.QUEUE";
+
+    private Destination destination = new ActiveMQQueue(QUEUE_NAME);
 
 
     @Autowired
-    public FlowcontrolMsgProducer(FdsConfigRepo fdsConfigRepo, FlowcontrolRawMsgRepo flowcontrolRawMsgRepo, JmsTemplate jmsTemplate) {
-        this.fdsConfigRepo = fdsConfigRepo;
+    public FlowcontrolMsgProducer(FdsConfigManager fdsConfigManager, AmqManager amqManager, FlowcontrolRawMsgRepo flowcontrolRawMsgRepo) {
+        this.fdsConfigManager = fdsConfigManager;
+        this.amqManager = amqManager;
         this.flowcontrolRawMsgRepo = flowcontrolRawMsgRepo;
-        this.jmsTemplate = jmsTemplate;
 
-        this.flowcontrolRawMsgLengthConfig = this.fdsConfigRepo.findByCode("FlowcontrolRawMsgLength").get(0);
-        this.flowcontrolRawMsgLength = Long.parseLong(flowcontrolRawMsgLengthConfig.getValue());
-
-        this.flowcontrolRawMsgIndexConfig = this.fdsConfigRepo.findByCode("FlowcontrolRawMsgIndex").get(0);
-        this.flowcontrolRawMsgIndex = Long.parseLong(flowcontrolRawMsgIndexConfig.getValue());
-    }
-    // 发送消息，destination是发送到的队列，message是待发送的消息
-    private void sendMessage(Destination destination, final String message) {
-        jmsTemplate.convertAndSend(destination, message);
+        this.init();
     }
 
     @Transactional
     public String getNextFlowcontrolRawMsg() {
         String flowcontrolRawMsg = this.flowcontrolRawMsgRepo.findOne(this.flowcontrolRawMsgIndex).getXmlContent();
-        if (this.flowcontrolRawMsgIndex < this.flowcontrolRawMsgLength) {
-            this.flowcontrolRawMsgIndex += 1;
-        } else {
-            this.flowcontrolRawMsgIndex = 1;
-        }
-        this.flowcontrolRawMsgIndexConfig.setValue(String.valueOf(this.flowcontrolRawMsgIndex));
-        this.fdsConfigRepo.save(flowcontrolRawMsgIndexConfig);
+        this.flowcontrolRawMsgIndex += 1;
+        this.fdsConfigManager.setFlowcontrolRawMsgIndex(this.flowcontrolRawMsgIndex);
         return flowcontrolRawMsg;
     }
 
-    @Scheduled(fixedRate = 300000)
+    @Scheduled(initialDelay = 600000 ,fixedRate = 300000)
     public void produceMessage() {
+        if (this.flowcontrolRawMsgIndex > this.flowcontrolRawMsgLength) {
+            this.init();
+        }
         String flowcontrolRawMsg = this.getNextFlowcontrolRawMsg();
-        this.sendMessage(this.destination, flowcontrolRawMsg);
+        amqManager.sendXmlMsg(this.destination, flowcontrolRawMsg);
+    }
+
+    void init() {
+        this.initLengthConfig();
+        this.initIndexConfig();
+        this.amqManager.deleteQueue(QUEUE_NAME);
+    }
+
+    private void initLengthConfig() {
+        this.flowcontrolRawMsgLength = 350;
+        this.fdsConfigManager.setFlowcontrolRawMsgLength(this.flowcontrolRawMsgLength);
+    }
+
+    private void initIndexConfig() {
+        this.flowcontrolRawMsgIndex = 1;
+        this.fdsConfigManager.setFlowcontrolRawMsgIndex(this.flowcontrolRawMsgIndex);
+
     }
 }
 

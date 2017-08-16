@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "uranus.fds.host",
+      "type": "java.lang.String",
+      "description": "Description for uranus.fds.host."
+  }
+] }

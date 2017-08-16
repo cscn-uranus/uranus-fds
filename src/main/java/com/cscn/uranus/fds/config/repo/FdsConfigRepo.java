@@ -7,5 +7,5 @@ import java.util.List;
 
 
 public interface FdsConfigRepo extends CrudRepository<FdsConfig, Long> {
-    public List<FdsConfig> findByCode(String code);
+    List<FdsConfig> findByCode(String code);
 }
