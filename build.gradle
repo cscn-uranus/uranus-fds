@@ -7,7 +7,7 @@ buildscript {
 
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.6.RELEASE")
-        classpath "gradle.plugin.cn.bestwu.gradle:propdeps-plugin:0.0.10"
+        classpath("gradle.plugin.cn.bestwu.gradle:propdeps-plugin:0.0.10")
     }
 
 }
@@ -19,8 +19,35 @@ apply plugin: "org.springframework.boot"
 apply plugin: "cn.bestwu.propdeps"
 apply plugin: "jacoco"
 
+task local {
+    doLast {
+        changeActiveProfile("local")
+    }
+}
+task dev {
+    doLast {
+        changeActiveProfile("dev")
+    }
+}
+task release {
+    doLast {
+        changeActiveProfile("release")
+    }
+}
+def changeActiveProfile(profile) {
+    def pFile = file("src/main/resources/application.properties")
+    Properties p = new Properties()
+    pFile.withInputStream { stream ->
+        p.load(stream)
+    }
+    p.setProperty("spring.profiles.active", profile)
+    pFile.withOutputStream { stream ->
+        p.store(stream, "Change active profile to ${profile}")
+    }
+}
+
 wrapper {
-    gradleVersion = '4.1'
+    gradleVersion = "4.1"
 }
 
 war {
@@ -32,7 +59,6 @@ jar {
     baseName = "uranus-fds-api"
     version = "0.0.1"
 }
-
 
 jacoco {
     reportsDir = file("$buildDir/jacoco/report")
@@ -71,7 +97,7 @@ dependencies {
 
     testCompile("org.springframework.boot:spring-boot-starter-test")
 
-    optional "org.springframework.boot:spring-boot-configuration-processor"
+    optional("org.springframework.boot:spring-boot-configuration-processor")
 
 
 }
