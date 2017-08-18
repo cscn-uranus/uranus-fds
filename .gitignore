@@ -30,7 +30,7 @@ hs_err_pid*
 build
 out
 
-# ellipse files
+# eclipse files
 .classpath
 .project
 .bin
