@@ -19,21 +19,6 @@ apply plugin: "org.springframework.boot"
 apply plugin: "cn.bestwu.propdeps"
 apply plugin: "jacoco"
 
-task local {
-    doLast {
-        changeActiveProfile("local")
-    }
-}
-task dev {
-    doLast {
-        changeActiveProfile("dev")
-    }
-}
-task release {
-    doLast {
-        changeActiveProfile("release")
-    }
-}
 def changeActiveProfile(profile) {
     def pFile = file("src/main/resources/application.properties")
     Properties p = new Properties()
@@ -46,6 +31,43 @@ def changeActiveProfile(profile) {
     }
 }
 
+task localProfile {
+    group = "spring-profiles"
+    doLast {
+        changeActiveProfile("local")
+    }
+}
+task devProfile {
+    group = "spring-profiles"
+    doLast {
+        changeActiveProfile("dev")
+    }
+}
+task releaseProfile {
+    group = "spring-profiles"
+    doLast {
+        changeActiveProfile("release")
+    }
+}
+task localBuild(dependsOn: build) {
+    group = "spring-build"
+    doFirst {
+        localProfile
+    }
+}
+
+task devBuild(dependsOn: build) {
+    group = "spring-build"
+    doFirst {
+        devProfile
+    }
+}
+task releaseBuild(dependsOn: build) {
+    group = "spring-build"
+    doFirst {
+        releaseProfile
+    }
+}
 wrapper {
     gradleVersion = "4.1"
 }
