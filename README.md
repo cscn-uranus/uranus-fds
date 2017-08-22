@@ -18,6 +18,7 @@
  - 本项目采用了持续集成，在持续集成中的生成方案是：
    - gradlew clean build jacocoTestReport
 #合并
-1. dev分支使用了保护策略，只能通过拉取来合并；
+1. dev分支为开发主分支，使用了保护策略，只能通过拉取来合并；
+2. master分支为release主分支，使用了保护策略，从dev拉取来合并。
    
 
