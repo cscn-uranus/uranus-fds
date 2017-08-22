@@ -17,5 +17,7 @@
 #持续集成
  - 本项目采用了持续集成，在持续集成中的生成方案是：
    - gradlew clean build jacocoTestReport
+#合并
+
    
 
