@@ -16,10 +16,10 @@ import org.springframework.context.annotation.FilterType;
 public class FdsTest extends SpringBootServletInitializer {
   @Override
   protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-    return application.sources(FdsApplication.class);
+    return application.sources(FdsTest.class);
   }
 
   public static void main(String[] args) {
-    SpringApplication.run(FdsApplication.class, args);
+    SpringApplication.run(FdsTest.class, args);
   }
 }

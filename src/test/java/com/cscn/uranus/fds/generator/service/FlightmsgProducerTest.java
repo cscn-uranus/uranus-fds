@@ -25,14 +25,14 @@ public class FlightmsgProducerTest {
 
   @Test
   public void singleMessageProduced() throws Exception {
-    this.flightmsgProducer.produceMessage();
+    this.flightmsgProducer.produceScheduledMessage();
     Assert.assertEquals("Queue length should be 1", 1, this.amqManager.getQueueSize(QUEUE_NAME));
   }
 
   @Test
   public void multipleMessageProduced() throws Exception {
     for (int i = 0; i < 120; i++) {
-      this.flightmsgProducer.produceMessage();
+      this.flightmsgProducer.produceScheduledMessage();
     }
     Assert.assertEquals(
         "Queue length should be 120", 120, this.amqManager.getQueueSize(QUEUE_NAME));
@@ -41,7 +41,7 @@ public class FlightmsgProducerTest {
   @Test
   public void thresholdMessageProduced() throws Exception {
     for (int i = 0; i < 350; i++) {
-      this.flightmsgProducer.produceMessage();
+      this.flightmsgProducer.produceScheduledMessage();
     }
     Assert.assertEquals(
         "Queue length should be 350", 350, this.amqManager.getQueueSize(QUEUE_NAME));
@@ -50,7 +50,7 @@ public class FlightmsgProducerTest {
   @Test
   public void overflowMessageProduced() throws Exception {
     for (int i = 0; i < 400; i++) {
-      this.flightmsgProducer.produceMessage();
+      this.flightmsgProducer.produceScheduledMessage();
     }
     Assert.assertEquals("Queue length should be 50", 50, this.amqManager.getQueueSize(QUEUE_NAME));
   }

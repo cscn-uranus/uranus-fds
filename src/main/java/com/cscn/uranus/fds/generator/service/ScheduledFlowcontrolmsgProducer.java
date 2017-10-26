@@ -9,9 +9,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@ExcludeFromTest
 @Service
 @Transactional
-public class FlowcontrolmsgProducer {
+public class ScheduledFlowcontrolmsgProducer {
 
   private final FdsConfigManager fdsConfigManager;
   private final FlowcontrolmsgRepo flowcontrolmsgRepo;
@@ -24,7 +25,7 @@ public class FlowcontrolmsgProducer {
 
   private Destination destination = new ActiveMQQueue(QUEUE_NAME);
 
-  public FlowcontrolmsgProducer(
+  public ScheduledFlowcontrolmsgProducer(
       FdsConfigManager fdsConfigManager,
       AmqManager amqManager,
       FlowcontrolmsgRepo flowcontrolmsgRepo) {
@@ -43,6 +44,7 @@ public class FlowcontrolmsgProducer {
     return flowcontrolmsg;
   }
 
+  @Scheduled(fixedRate = 180000)
   public void produceScheduledMessage() {
     if (this.flowcontrolmsgIndex > this.flowcontrolmsgLength) {
       this.init();

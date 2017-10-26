@@ -1,6 +1,5 @@
 package com.cscn.uranus.fds.config.service;
 
-import com.cscn.uranus.fds.config.FdsConfigEnum;
 import com.cscn.uranus.fds.config.entity.FdsConfig;
 import com.cscn.uranus.fds.config.repo.FdsConfigRepo;
 import org.springframework.stereotype.Service;
@@ -11,6 +10,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class FdsConfigManager {
 
   private final FdsConfigRepo fdsConfigRepo;
+
+  private final String DEFAULT_FLIGHTMSG_LENGTH_CODE = "FLIGHTMSG_LENGTH";
+  private final String DEFAULT_FLIGHTMSG_INDEX_CODE = "FLIGHTMSG_INDEX";
+  private final long DEFAULT_FLIGHTMSG_LENGTH_VALUE = 350;
+  private final long DEFAULT_FLIGHTMSG_INDEX_VALUE = 1;
+
+  private final String DEFAULT_FLOWCONTROLMSG_LENGTH_CODE = "FLOWCONTROLMSG_LENGTH";
+  private final String DEFAULT_FLOWCONTROLMSG_INDEX_CODE = "FLOWCONTROLMSG_INDEX";
+  private final long DEFAULT_FLOWCONTROLMSG_LENGTH_VALUE = 350;
+  private final long DEFAULT_FLOWCONTROLMSG_INDEX_VALUE = 1;
 
   public FdsConfigManager(FdsConfigRepo fdsConfigRepo) {
     this.fdsConfigRepo = fdsConfigRepo;
@@ -23,59 +32,88 @@ public class FdsConfigManager {
   }
 
   public void initDefaultFlightmsgConfig() {
-    long length = this.fdsConfigRepo.findByCode(FdsConfigEnum.FLIGHTMSG_LENGTH.getCode()).size();
+    long length = this.fdsConfigRepo.findByCode(this.DEFAULT_FLIGHTMSG_LENGTH_CODE).size();
     if (length < 1) {
       FdsConfig lengthConfig = new FdsConfig();
-      lengthConfig.setCode(FdsConfigEnum.FLIGHTMSG_LENGTH.getCode());
-      lengthConfig.setValue(FdsConfigEnum.FLIGHTMSG_LENGTH.getValue());
+      lengthConfig.setCode(this.DEFAULT_FLIGHTMSG_LENGTH_CODE);
+      lengthConfig.setValue(String.valueOf(this.DEFAULT_FLIGHTMSG_LENGTH_VALUE));
       this.fdsConfigRepo.save(lengthConfig);
+    } else {
+      this.setFlightmsgLength(this.DEFAULT_FLIGHTMSG_LENGTH_VALUE);
     }
-    length = this.fdsConfigRepo.findByCode(FdsConfigEnum.FLIGHTMSG_INDEX.getCode()).size();
+    length = this.fdsConfigRepo.findByCode(this.DEFAULT_FLIGHTMSG_INDEX_CODE).size();
     if (length < 1) {
       FdsConfig indexConfig = new FdsConfig();
-      indexConfig.setCode(FdsConfigEnum.FLIGHTMSG_INDEX.getCode());
-      indexConfig.setValue(FdsConfigEnum.FLIGHTMSG_INDEX.getValue());
+      indexConfig.setCode(this.DEFAULT_FLIGHTMSG_INDEX_CODE);
+      indexConfig.setValue(String.valueOf(this.DEFAULT_FLIGHTMSG_INDEX_VALUE));
       this.fdsConfigRepo.save(indexConfig);
+    } else {
+      this.setFlowcontrolmsgIndex(this.DEFAULT_FLOWCONTROLMSG_INDEX_VALUE);
     }
   }
 
   public void initDefaultFlowcontrolmsgConfig() {
-    long length =
-        this.fdsConfigRepo.findByCode(FdsConfigEnum.FLOWCONTROLMSG_LENGTH.getCode()).size();
+    long length = this.fdsConfigRepo.findByCode(this.DEFAULT_FLOWCONTROLMSG_LENGTH_CODE).size();
     if (length < 1) {
       FdsConfig lengthConfig = new FdsConfig();
-      lengthConfig.setCode(FdsConfigEnum.FLOWCONTROLMSG_LENGTH.getCode());
-      lengthConfig.setValue(FdsConfigEnum.FLOWCONTROLMSG_LENGTH.getValue());
+      lengthConfig.setCode(this.DEFAULT_FLOWCONTROLMSG_LENGTH_CODE);
+      lengthConfig.setValue(String.valueOf(this.DEFAULT_FLOWCONTROLMSG_LENGTH_VALUE));
       this.fdsConfigRepo.save(lengthConfig);
+    } else {
+      this.setFlowcontrolmsgLength(this.DEFAULT_FLOWCONTROLMSG_LENGTH_VALUE);
+
     }
-    length = this.fdsConfigRepo.findByCode(FdsConfigEnum.FLOWCONTROLMSG_INDEX.getCode()).size();
+    length = this.fdsConfigRepo.findByCode(this.DEFAULT_FLOWCONTROLMSG_INDEX_CODE).size();
     if (length < 1) {
       FdsConfig indexConfig = new FdsConfig();
-      indexConfig.setCode(FdsConfigEnum.FLOWCONTROLMSG_INDEX.getCode());
-      indexConfig.setValue(FdsConfigEnum.FLOWCONTROLMSG_INDEX.getValue());
+      indexConfig.setCode(this.DEFAULT_FLOWCONTROLMSG_INDEX_CODE);
+      indexConfig.setValue(String.valueOf(this.DEFAULT_FLOWCONTROLMSG_INDEX_VALUE));
       this.fdsConfigRepo.save(indexConfig);
+    } else {
+      this.setFlowcontrolmsgIndex(this.DEFAULT_FLOWCONTROLMSG_INDEX_VALUE);
     }
   }
 
   public void setFlightmsgLength(long length) {
-    FdsConfig config = this.fdsConfigRepo.findByCode(FdsConfigEnum.FLIGHTMSG_LENGTH.getCode()).get(0);
+    FdsConfig config = this.fdsConfigRepo.findByCode(this.DEFAULT_FLIGHTMSG_LENGTH_CODE).get(0);
     config.setValue(String.valueOf(length));
+    this.fdsConfigRepo.save(config);
+  }
+  public void setFlightmsgIndex(long index) {
+    FdsConfig config = this.fdsConfigRepo.findByCode(this.DEFAULT_FLIGHTMSG_INDEX_CODE).get(0);
+    config.setValue(String.valueOf(index));
     this.fdsConfigRepo.save(config);
   }
 
-  public void setFlightmsgIndex(long index) {
-    FdsConfig config = this.fdsConfigRepo.findByCode(FdsConfigEnum.FLIGHTMSG_INDEX.getCode()).get(0);
-    config.setValue(String.valueOf(index));
-    this.fdsConfigRepo.save(config);
+  public Long getFlightmsgLength() {
+    FdsConfig config = this.fdsConfigRepo.findByCode(this.DEFAULT_FLIGHTMSG_LENGTH_CODE).get(0);
+    return Long.parseLong(config.getValue());
   }
+
   public void setFlowcontrolmsgLength(long length) {
-    FdsConfig config = this.fdsConfigRepo.findByCode(FdsConfigEnum.FLOWCONTROLMSG_LENGTH.getCode()).get(0);
+    FdsConfig config = this.fdsConfigRepo.findByCode(this.DEFAULT_FLOWCONTROLMSG_LENGTH_CODE).get(0);
     config.setValue(String.valueOf(length));
     this.fdsConfigRepo.save(config);
   }
+  public Long getFlightmsgIndex() {
+    FdsConfig config = this.fdsConfigRepo.findByCode(this.DEFAULT_FLIGHTMSG_INDEX_CODE).get(0);
+    return Long.parseLong(config.getValue());
+  }
+
   public void setFlowcontrolmsgIndex(long index) {
-    FdsConfig config = this.fdsConfigRepo.findByCode(FdsConfigEnum.FLOWCONTROLMSG_INDEX.getCode()).get(0);
+    FdsConfig config = this.fdsConfigRepo.findByCode(this.DEFAULT_FLOWCONTROLMSG_INDEX_CODE).get(0);
     config.setValue(String.valueOf(index));
     this.fdsConfigRepo.save(config);
+  }
+
+  public Long getFlowcontrolmsgLength() {
+    FdsConfig config =
+        this.fdsConfigRepo.findByCode(this.DEFAULT_FLOWCONTROLMSG_LENGTH_CODE).get(0);
+    return Long.parseLong(config.getValue());
+  }
+
+  public Long getFlowcontrolmsgIndex() {
+    FdsConfig config = this.fdsConfigRepo.findByCode(this.DEFAULT_FLOWCONTROLMSG_INDEX_CODE).get(0);
+    return Long.parseLong(config.getValue());
   }
 }

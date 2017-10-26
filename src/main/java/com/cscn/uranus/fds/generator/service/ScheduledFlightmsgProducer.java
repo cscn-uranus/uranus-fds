@@ -9,9 +9,10 @@ import org.apache.activemq.command.ActiveMQQueue;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+@ExcludeFromTest
 @Service
 @Transactional
-public class FlightmsgProducer {
+public class ScheduledFlightmsgProducer {
 
   private final FdsConfigManager fdsConfigManager;
   private final FlightmsgRepo flightmsgRepo;
@@ -23,7 +24,7 @@ public class FlightmsgProducer {
 
   private Destination destination = new ActiveMQQueue(QUEUE_NAME);
 
-  public FlightmsgProducer(
+  public ScheduledFlightmsgProducer(
       FdsConfigManager fdsConfigManager, AmqManager amqManager, FlightmsgRepo flightmsgRepo) {
     this.fdsConfigManager = fdsConfigManager;
     this.amqManager = amqManager;
@@ -39,6 +40,7 @@ public class FlightmsgProducer {
     return flightmsg;
   }
 
+  @Scheduled(fixedRate = 180000)
   public void produceScheduledMessage() {
     if (this.flightmsgIndex > this.flightmsgLength) {
       this.init();
