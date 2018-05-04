@@ -1,1 +1,4 @@
+include 'modules/core'
+include 'modules/asx'
+
 rootProject.name = 'uranus-fds'

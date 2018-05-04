@@ -1,0 +1,17 @@
+#
+# Custom configuration variables
+#
+uranus:
+  fds:
+    host: localhost
+
+# Active MQ
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:mysql://${uranus.fds.host}:3306/uranus_fds?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: Nd@kkat67f
+

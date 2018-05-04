@@ -1,128 +1,44 @@
 buildscript {
+    ext {
+        springBootVersion = '2.0.1.RELEASE'
+        dependencyManagementPluginVersion = '1.0.4.RELEASE'
+    }
     repositories {
-        maven {
-            url "https://plugins.gradle.org/m2/"
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/central/' }
+        mavenLocal()
+        mavenCentral()
+        maven { url 'http://repo.spring.io/plugins-release' }
+    }
+    dependencies {
+        classpath("io.spring.gradle:dependency-management-plugin:${dependencyManagementPluginVersion}")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+allprojects {
+    group = 'com.cscn.uranus'
+    version = '0.0.1'
+
+    apply plugin: 'java'
+
+}
+subprojects {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    apply plugin: 'io.spring.dependency-management'
+    repositories {
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/central/' }
+        mavenLocal()
+        mavenCentral()
+        maven { url 'http://repo.spring.io/plugins-release' }
+    }
+    dependencyManagement {
+        imports {
+            mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
         }
     }
-
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.7.RELEASE")
-        classpath("gradle.plugin.cn.bestwu.gradle:propdeps-plugin:0.0.10")
-    }
-
 }
 
-apply plugin: "java"
-apply plugin: "war"
-apply plugin: "idea"
-apply plugin: "org.springframework.boot"
-apply plugin: "cn.bestwu.propdeps"
-apply plugin: "jacoco"
-
-def changeActiveProfile(profile) {
-    def pFile = file("src/main/resources/application.properties")
-    Properties p = new Properties()
-    pFile.withInputStream { stream ->
-        p.load(stream)
-    }
-    p.setProperty("spring.profiles.active", profile)
-    pFile.withOutputStream { stream ->
-        p.store(stream, "Change active profile to ${profile}")
-    }
-}
-
-task localProfile {
-    group = "spring-profiles"
-    doLast {
-        changeActiveProfile("local")
-    }
-}
-task devProfile {
-    group = "spring-profiles"
-    doLast {
-        changeActiveProfile("dev")
-    }
-}
-task releaseProfile {
-    group = "spring-profiles"
-    doLast {
-        changeActiveProfile("release")
-    }
-}
-task localBuild(dependsOn: build) {
-    group = "spring-build"
-    doFirst {
-        localProfile
-    }
-}
-
-task devBuild(dependsOn: build) {
-    group = "spring-build"
-    doFirst {
-        devProfile
-    }
-}
-task releaseBuild(dependsOn: build) {
-    group = "spring-build"
-    doFirst {
-        releaseProfile
-    }
-}
-wrapper {
-    gradleVersion = "4.1"
-}
-
-war {
-    baseName = "uranus-fds-api"
-    version = "0.0.1"
-}
-
-jar {
-    baseName = "uranus-fds-api"
-    version = "0.0.1"
-}
-
-jacoco {
-    reportsDir = file("$buildDir/jacoco/report")
-}
-jacocoTestReport {
-    reports {
-        xml.enabled = true
-        csv.enabled = false
-    }
-}
-
-repositories {
-    jcenter()
-}
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-dependencies {
-
-    // boot starter
-    compile("org.springframework.boot:spring-boot-starter-web:1.5.7.RELEASE")
-    compile("org.springframework.boot:spring-boot-starter-actuator")
-    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
-
-    // Active MQ
-    compile("org.springframework.boot:spring-boot-starter-activemq")
-    compile("org.apache.activemq:activemq-broker")
-    compile("com.fasterxml.jackson.dataformat:jackson-dataformat-xml")
-
-    // JPA Data (We are going to use Repositories, Entities, Hibernate, etc...)
-    compile("org.springframework.boot:spring-boot-starter-data-jpa")
-
-    // Use MySQL Connector-J
-    compile("mysql:mysql-connector-java")
-
-    testCompile("org.springframework.boot:spring-boot-starter-test")
-
-    optional "org.springframework.boot:spring-boot-configuration-processor"
-
-}
-compileJava.dependsOn(processResources)
 
 
 

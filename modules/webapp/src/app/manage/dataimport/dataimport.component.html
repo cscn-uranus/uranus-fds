@@ -1,0 +1,60 @@
+<nz-steps [(nzCurrent)]="current">
+  <nz-step [nzTitle]="'输入报文'"></nz-step>
+  <nz-step [nzTitle]="'预览'"></nz-step>
+  <nz-step [nzTitle]="'提交'"></nz-step>
+</nz-steps>
+
+<div class="steps-content">
+  <form nz-form [formGroup]="gramsForm" *ngIf="current===0">
+    <div nz-form-item nz-row>
+      <div nz-col [nzSpan]="2" nz-form-label>
+        <label nz-form-item-required>报文文本</label>
+      </div>
+      <div nz-col [nzSpan]="22" nz-form-control>
+        <nz-input formControlName="gramsText" [nzRows]="30" [nzType]="'textarea'"
+                  [nzPlaceHolder]="'ZCZC ...... NNNN'" [nzSize]="'large'">
+        </nz-input>
+        <div nz-form-explain
+             *ngIf="getFormControl('gramsText').dirty&&getFormControl('gramsText').hasError('required')">
+          请输入报文!
+        </div>
+        <div nz-form-explain
+             *ngIf="getFormControl('gramsText').dirty&&getFormControl('gramsText').hasError('wrongGramsText')">
+          报文格式不正确!
+        </div>
+      </div>
+    </div>
+  </form>
+  <nz-table #nzTable class="gram-table" [nzDataSource]="asxgrams" [nzPageSize]="20"
+            nzShowSizeChanger
+            *ngIf="current === 1">
+    <thead nz-thead>
+    <tr>
+      <th nz-th [nzWidth]="'10%'"><span>报头</span></th>
+      <th nz-th [nzWidth]="'80%'"><span>内容</span></th>
+      <th nz-th [nzWidth]="'10%'"><span>报尾</span></th>
+    </tr>
+    </thead>
+    <tbody nz-tbody>
+    <tr nz-tbody-tr *ngFor="let data of nzTable.data">
+      <td nz-td> {{data.header}}</td>
+      <td nz-td>{{data.content}}</td>
+      <td nz-td>{{data.tail}}</td>
+    </tr>
+    </tbody>
+  </nz-table>
+</div>
+
+
+<div class="steps-action">
+  <button nz-button [nzType]="'default'" (click)="pre()" *ngIf="current > 0">
+    <span>上一步</span>
+  </button>
+  <button nz-button [nzType]="'default'" (click)="next()" *ngIf="current < 2"
+          [disabled]="!gramsForm.valid">
+    <span>下一步</span>
+  </button>
+  <button nz-button [nzType]="'primary'" (click)="done()" *ngIf="current === 2">
+    <span>完成</span>
+  </button>
+</div>

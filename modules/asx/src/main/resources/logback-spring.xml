@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2017. Cscn and/or its affiliates. All rights reserved.
+  ~ Cscn PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+  -->
+
+<configuration debug="false">
+
+  <property name="CONSOLE_LOG_PATTERN"
+    value="%date{yyyy-MM-dd HH:mm:ss}|%highlight(%-5level)|%yellow(%thread)|%boldGreen(%logger{32})|%msg%n"/>
+  <!-- Console 输出设置 -->
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder charset="UTF-8">
+      <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+    </encoder>
+  </appender>
+
+  <!-- 日志输出级别 -->
+  <root level="INFO">
+    <appender-ref ref="CONSOLE"/>
+  </root>
+</configuration>
