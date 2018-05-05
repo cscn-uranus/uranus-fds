@@ -31,24 +31,28 @@ public class AsxGramsGenerator {
     this.asxScheduler = asxScheduler;
   }
 
-  private HashSet<AsxGram> generateRandomAsxGrams() {
+  public HashSet<AsxGram> generateRandomAsxGrams() {
     List<AsxGram> allAsxGrams = new ArrayList<>(this.asxGramManager.findAll());
-    HashSet<AsxGram> randomAsxGrams = new HashSet<>();
-    int minCount = 1;
-    int maxCount = 5;
-    int randomCount = rangeRandom(minCount, maxCount);
+    if (allAsxGrams.size()>5) {
+      HashSet<AsxGram> randomAsxGrams = new HashSet<>();
+      int minCount = 1;
+      int maxCount = 5;
+      int randomCount = rangeRandom(minCount, maxCount);
 
-    int minIndex = 0;
-    int maxIndex = allAsxGrams.size();
+      int minIndex = 0;
+      int maxIndex = allAsxGrams.size();
 
-    if (maxIndex == 0) {
-      return null;
-    } else {
-      for (int i = 0; i < randomCount; i++) {
-        int randomIndex = rangeRandom(minIndex, maxIndex);
-        randomAsxGrams.add(allAsxGrams.get(randomIndex));
+      if (maxIndex == 0) {
+        return null;
+      } else {
+        for (int i = 0; i < randomCount; i++) {
+          int randomIndex = rangeRandom(minIndex, maxIndex);
+          randomAsxGrams.add(allAsxGrams.get(randomIndex));
+        }
+        return randomAsxGrams;
       }
-      return randomAsxGrams;
+    } else {
+      return null;
     }
   }
 
@@ -58,24 +62,7 @@ public class AsxGramsGenerator {
   }
 
   public void startProduceGramsViaUdp() {
-    JobDetail job = newJob(AsxOutEndpointJob.class).withIdentity("UdpOutJob", "group1").build();
 
-    HashSet<AsxGram> randomAsxGrams = this.generateRandomAsxGrams();
-
-    String udpMessagePayload;
-    StringBuilder sb = new StringBuilder();
-    for (AsxGram gram : randomAsxGrams) {
-      sb.append(gram.getHeader()).append(gram.getContent()).append(gram.getTail());
-    }
-    udpMessagePayload = sb.toString();
-
-    job.getJobDataMap().put("MESSAGE", udpMessagePayload);
-
-    Trigger trigger = newTrigger().withIdentity("UdpOutTrigger", "group1")
-        .withSchedule(simpleSchedule().withIntervalInSeconds(1).repeatForever()).startNow().build();
-
-    this.asxScheduler.scheduleJob(job, trigger);
-    this.asxScheduler.start();
 
   }
 }

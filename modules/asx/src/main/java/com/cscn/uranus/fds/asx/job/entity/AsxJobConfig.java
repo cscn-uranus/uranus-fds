@@ -1,5 +1,6 @@
 package com.cscn.uranus.fds.asx.job.entity;
 
+import com.cscn.uranus.fds.asx.job.config.AsxJobStatus;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -12,7 +13,7 @@ import org.hibernate.annotations.NaturalId;
 
 
 @Entity
-public class AsxJob implements Serializable {
+public class AsxJobConfig implements Serializable {
 
   @Id
   private String id;
@@ -20,13 +21,19 @@ public class AsxJob implements Serializable {
   @NaturalId
   private String name;
 
+  private String parentGroup;
+
+  private String className;
+
   private String cronExpression;
+
+  private AsxJobStatus status;
 
   private LocalDateTime creationTime;
 
   private LocalDateTime updateTime;
 
-  public AsxJob() {
+  public AsxJobConfig() {
   }
 
   public String getName() {
@@ -37,12 +44,36 @@ public class AsxJob implements Serializable {
     this.name = name;
   }
 
+  public String getParentGroup() {
+    return parentGroup;
+  }
+
+  public void setParentGroup(String parentGroup) {
+    this.parentGroup = parentGroup;
+  }
+
+  public String getClassName() {
+    return className;
+  }
+
+  public void setClassName(String className) {
+    this.className = className;
+  }
+
   public String getCronExpression() {
     return cronExpression;
   }
 
   public void setCronExpression(String cronExpression) {
     this.cronExpression = cronExpression;
+  }
+
+  public AsxJobStatus getStatus() {
+    return status;
+  }
+
+  public void setStatus(AsxJobStatus status) {
+    this.status = status;
   }
 
   @Override
@@ -53,8 +84,8 @@ public class AsxJob implements Serializable {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    AsxJob asxJob = (AsxJob) o;
-    return Objects.equals(name, asxJob.name);
+    AsxJobConfig asxJobConfig = (AsxJobConfig) o;
+    return Objects.equals(name, asxJobConfig.name);
   }
 
   @Override

@@ -21,6 +21,5 @@ public class AsxApplication extends SpringBootServletInitializer {
   public static void main(String[] args) {
     ConfigurableApplicationContext ctx = SpringApplication.run(AsxApplication.class, args);
     ctx.publishEvent(new AsxContextRefreshedEventListener());
-    ctx.close();
   }
 }

@@ -1,4 +1,4 @@
 package com.cscn.uranus.fds.asx.job.config;
 
-public enum JobTypeEnum {
+public enum AsxJobType {
 }

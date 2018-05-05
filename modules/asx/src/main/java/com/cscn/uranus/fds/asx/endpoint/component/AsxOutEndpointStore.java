@@ -5,14 +5,23 @@ import java.util.Set;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AsxOutEndpointContainer {
+public class AsxOutEndpointStore {
   private Set<IAsxOutEndpoint> asxOutEndpoints;
 
-  public AsxOutEndpointContainer() {
+  public AsxOutEndpointStore() {
     this.asxOutEndpoints = new HashSet<>();
   }
 
   public void add(IAsxOutEndpoint asxOutEndpoint) {
     this.asxOutEndpoints.add(asxOutEndpoint);
+  }
+
+  public IAsxOutEndpoint findByName(String name) {
+    for(IAsxOutEndpoint iAsxOutEndpoint : this.asxOutEndpoints) {
+      if (iAsxOutEndpoint.name().equals(name)) {
+        return iAsxOutEndpoint;
+      }
+    }
+    return null;
   }
 }
