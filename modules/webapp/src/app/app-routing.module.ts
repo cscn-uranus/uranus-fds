@@ -8,7 +8,11 @@ const appRoutes: Routes = [
     path: '', redirectTo: 'manage', pathMatch: 'full'
   },
   {
-    path: 'home',component: HomeComponent
+    path: 'home',component: HomeComponent,
+    data: {
+      title: 'home',
+      description: 'home',
+    }
   },
   {
     path: 'manage',

@@ -8,10 +8,11 @@ import {ManageRoutingModule} from "./manage-routing.module";
 
 import {ManageComponent} from "./manage.component";
 import {DataimportComponent} from "./dataimport/dataimport.component";
-import {AdapterComponent} from "./adapter/adapter.component";
+import {EndpointComponent} from "./endpoint/endpoint.component";
 import {DataimportService} from "./dataimport/dataimport.service";
 import {HttpClientModule} from "@angular/common/http";
 import {NgZorroAntdModule} from "ng-zorro-antd";
+import {JobComponent} from "./job/job.component";
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import {NgZorroAntdModule} from "ng-zorro-antd";
   exports: [],
   declarations: [
     ManageComponent,
-    AdapterComponent,
+    JobComponent,
+    EndpointComponent,
     DataimportComponent,
   ],
   providers: [

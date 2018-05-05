@@ -124,7 +124,7 @@ public class AsxInitializer {
       Trigger trigger = newTrigger().withIdentity(jobConfig.getName()+"-Trigger", jobConfig.getParentGroup())
           .withSchedule(cronSchedule(jobConfig.getCronExpression())).build();
       jobDetail.getJobDataMap().put("GENERATOR",this.asxGramsGenerator);
-      jobDetail.getJobDataMap().put("ENDPOINT",this.asxOutEndpointStore.findByName("报文UDP输出"));
+      jobDetail.getJobDataMap().put("ENDPOINT",this.asxOutEndpointStore.findByName(jobConfig.getName()));
       this.asxScheduler.scheduleJob(jobDetail, trigger);
     }
 

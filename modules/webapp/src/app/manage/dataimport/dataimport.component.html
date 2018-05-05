@@ -11,9 +11,9 @@
         <label nz-form-item-required>报文文本</label>
       </div>
       <div nz-col [nzSpan]="22" nz-form-control>
-        <nz-input formControlName="gramsText" [nzRows]="30" [nzType]="'textarea'"
-                  [nzPlaceHolder]="'ZCZC ...... NNNN'" [nzSize]="'large'">
-        </nz-input>
+        <textarea formControlName="gramsText" row="50" nz-input
+                  placeholder="ZCZC ...... NNNN">
+        </textarea>
         <div nz-form-explain
              *ngIf="getFormControl('gramsText').dirty&&getFormControl('gramsText').hasError('required')">
           请输入报文!
@@ -25,7 +25,7 @@
       </div>
     </div>
   </form>
-  <nz-table #nzTable class="gram-table" [nzDataSource]="asxgrams" [nzPageSize]="20"
+  <nz-table #nzTable class="gram-table" [nzData]="asxgrams" [nzPageSize]="20"
             nzShowSizeChanger
             *ngIf="current === 1">
     <thead nz-thead>

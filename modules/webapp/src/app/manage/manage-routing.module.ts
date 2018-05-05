@@ -1,8 +1,9 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {AdapterComponent} from "./adapter/adapter.component";
+import {EndpointComponent} from "./endpoint/endpoint.component";
 import {DataimportComponent} from "./dataimport/dataimport.component";
 import {ManageComponent} from "./manage.component";
+import {JobComponent} from "./job/job.component";
 
 const appManageRoutes: Routes = [
   {
@@ -13,6 +14,14 @@ const appManageRoutes: Routes = [
     },
     children: [
       {
+        path: 'job', component: JobComponent,
+        data:
+          {
+            title: '作业',
+            description: '作业的管理',
+          }
+      },
+      {
         path: DataimportComponent.path, component: DataimportComponent,
         data: {
           title: DataimportComponent.title,
@@ -20,11 +29,11 @@ const appManageRoutes: Routes = [
         }
       },
       {
-        path: 'adapter', component: AdapterComponent,
+        path: 'endpoint', component: EndpointComponent,
         data:
           {
-            title: '适配器管理',
-            description: '外部适配器的管理',
+            title: '终结点',
+            description: '终结点的管理',
           }
       }
     ]
