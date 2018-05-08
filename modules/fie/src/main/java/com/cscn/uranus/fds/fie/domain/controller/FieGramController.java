@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = "/asxgram")
+@RequestMapping(path = "/fieGram")
 public class FieGramController {
 
   private final FieGramManager fieGramManager;

@@ -1,7 +1,7 @@
-package com.cscn.uranus.fds.fie.eip.endpoint.service;
+package com.cscn.uranus.fds.fie.job.service;
 
-import com.cscn.uranus.fds.fie.eip.endpoint.entity.FieEndpoint;
-import com.cscn.uranus.fds.fie.eip.endpoint.repo.FieEndpointRepo;
+import com.cscn.uranus.fds.fie.job.entity.FieEndpoint;
+import com.cscn.uranus.fds.fie.job.repo.FieEndpointRepo;
 import java.util.HashSet;
 import java.util.Set;
 import javax.transaction.Transactional;

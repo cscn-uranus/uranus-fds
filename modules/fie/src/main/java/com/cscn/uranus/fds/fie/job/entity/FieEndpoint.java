@@ -1,11 +1,17 @@
-package com.cscn.uranus.fds.fie.eip.endpoint.entity;
+package com.cscn.uranus.fds.fie.job.entity;
 
-import com.cscn.uranus.fds.fie.eip.endpoint.entity.type.FieEndpointType;
+import com.cscn.uranus.fds.fie.job.entity.type.FieEndpointType;
+import com.cscn.uranus.fds.fie.job.entity.type.FieJobStatus;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import org.hibernate.annotations.NaturalId;
@@ -15,6 +21,14 @@ public class FieEndpoint {
   @Id
   private String id;
 
+  @OneToMany(
+      mappedBy = "fieEndpoint",
+      fetch = FetchType.LAZY,
+      cascade = CascadeType.ALL,
+      orphanRemoval = true
+  )
+  private Set<FieJobEndpoint> jobEndpoints = new HashSet<>();
+
   @NaturalId
   private String name;
 
@@ -22,7 +36,6 @@ public class FieEndpoint {
   private String uri;
 
   private FieEndpointType type;
-
 
   private LocalDateTime creationTime;
 

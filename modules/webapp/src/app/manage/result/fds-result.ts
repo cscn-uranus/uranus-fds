@@ -1,4 +1,4 @@
-export class Asxresult<T> {
+export class FdsResult<T> {
   code: number;
   message: string;
   description: string;

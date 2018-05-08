@@ -1,4 +1,4 @@
-package com.cscn.uranus.fds.fie.eip.endpoint.component;
+package com.cscn.uranus.fds.fie.job.component;
 
 import org.springframework.integration.ip.udp.UnicastSendingMessageHandler;
 import org.springframework.integration.support.MessageBuilder;

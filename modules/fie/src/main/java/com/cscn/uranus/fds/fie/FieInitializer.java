@@ -4,12 +4,12 @@ package com.cscn.uranus.fds.fie;
 import static org.quartz.CronScheduleBuilder.cronSchedule;
 import static org.quartz.TriggerBuilder.newTrigger;
 
-import com.cscn.uranus.fds.fie.eip.endpoint.entity.type.FieEndpointType;
-import com.cscn.uranus.fds.fie.eip.endpoint.component.FieOutEndpointStore;
-import com.cscn.uranus.fds.fie.eip.endpoint.component.FieUdpOutEndpoint;
-import com.cscn.uranus.fds.fie.eip.endpoint.entity.FieEndpoint;
-import com.cscn.uranus.fds.fie.eip.endpoint.service.FieEndpointManager;
-import com.cscn.uranus.fds.fie.job.component.FieGramGenerator;
+import com.cscn.uranus.fds.fie.job.entity.type.FieEndpointType;
+import com.cscn.uranus.fds.fie.job.component.FieOutEndpointStore;
+import com.cscn.uranus.fds.fie.job.component.FieUdpOutEndpoint;
+import com.cscn.uranus.fds.fie.job.entity.FieEndpoint;
+import com.cscn.uranus.fds.fie.job.service.FieEndpointManager;
+import com.cscn.uranus.fds.fie.domain.component.FieGramGenerator;
 import com.cscn.uranus.fds.fie.job.component.FieGramOutJob;
 import com.cscn.uranus.fds.fie.job.component.FieScheduler;
 import com.cscn.uranus.fds.fie.job.entity.FieJob;
@@ -60,13 +60,14 @@ public class FieInitializer {
   private void initializeEndpointConfig() {
     Set<FieEndpoint> fieEndpointsPersisted = this.fieEndpointManager.findAll();
     FieEndpoint defaultFieEndpoint = new FieEndpoint();
-    defaultFieEndpoint.setName("报文UDP输出");
+    defaultFieEndpoint.setName("测试Udp输出终结点");
     defaultFieEndpoint.setType(FieEndpointType.UDP_CLIENT);
     defaultFieEndpoint.setUri("udp://localhost:10000");
 
     if (!fieEndpointsPersisted.contains(defaultFieEndpoint)) {
       this.fieEndpointManager.add(defaultFieEndpoint);
     }
+    _logger.info("服务终结点配置初始化完成！");
   }
 
   private void initializeJobConfig() {
@@ -76,10 +77,11 @@ public class FieInitializer {
     defaultFieJob.setParentGroup("defaultGroup");
     defaultFieJob.setClassName("com.cscn.uranus.fds.fie.job.component.AsxOutEndpointJob");
     defaultFieJob.setStatus(FieJobStatus.RUNNING);
-    defaultFieJob.setCronExpression("0/1 * * * * ? ");
+    defaultFieJob.setCronExpression("0/1 * * * * ?");
     if (!asxJobsPersistedConfig.contains(defaultFieJob)) {
       this.fieJobManager.add(defaultFieJob);
     }
+    _logger.info("任务配置初始化完成！");
   }
 
   private void initializeEndpointInstance() {
@@ -92,6 +94,7 @@ public class FieInitializer {
         this.fieOutEndpointStore.register(fieUdpOutEndpoint);
       }
     }
+    _logger.info("服务终结点实例化完成！");
   }
 
   private String getHostFromUri(String uri) {
@@ -126,10 +129,11 @@ public class FieInitializer {
           .withSchedule(cronSchedule(jobConfig.getCronExpression())).build();
       jobDetail.getJobDataMap().put("GENERATOR", this.fieGramGenerator);
       jobDetail.getJobDataMap()
-          .put("ENDPOINT", this.fieOutEndpointStore.findByName(jobConfig.getName()));
+          .put("ENDPOINT", this.fieOutEndpointStore.findByName("测试Udp输出终结点"));
       this.fieScheduler.scheduleJob(jobDetail, trigger);
     }
-
+    _logger.info("任务实例初始化完成！");
     this.fieScheduler.start();
+    _logger.info("启动调度器完成！");
   }
 }

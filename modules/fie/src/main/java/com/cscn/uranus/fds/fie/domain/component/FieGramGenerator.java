@@ -1,4 +1,4 @@
-package com.cscn.uranus.fds.fie.job.component;
+package com.cscn.uranus.fds.fie.domain.component;
 
 import com.cscn.uranus.fds.fie.domain.entity.FieGram;
 import com.cscn.uranus.fds.fie.domain.service.FieGramManager;
@@ -8,24 +8,37 @@ import java.util.List;
 import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 public class FieGramGenerator {
 
   private final FieGramManager fieGramManager;
-  private final FieScheduler fieScheduler;
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-  public FieGramGenerator(FieGramManager fieGramManager,
-      FieScheduler fieScheduler) {
+  public FieGramGenerator(FieGramManager fieGramManager) {
     this.fieGramManager = fieGramManager;
-    this.fieScheduler = fieScheduler;
   }
 
-  public HashSet<FieGram> generateRandomAsxGrams() {
+  public String generateRandomFieGramsText() {
+    HashSet<FieGram> randomFieGrams = this.generateRandomFieGrams();
+
+    if (randomFieGrams != null) {
+      String gramText;
+      StringBuilder sb = new StringBuilder();
+      for (FieGram gram : randomFieGrams) {
+        sb.append(gram.getHeader()).append(gram.getContent()).append(gram.getTail());
+      }
+      gramText = sb.toString();
+      return gramText;
+    } else {
+      return null;
+    }
+  }
+
+  public HashSet<FieGram> generateRandomFieGrams() {
     List<FieGram> allFieGrams = new ArrayList<>(this.fieGramManager.findAll());
-    if (allFieGrams.size()>5) {
+    if (allFieGrams.size() > 5) {
       HashSet<FieGram> randomFieGrams = new HashSet<>();
       int minCount = 1;
       int maxCount = 5;
@@ -53,9 +66,5 @@ public class FieGramGenerator {
     return (random.nextInt(max) % ((max - min) + 1)) + min;
   }
 
-  public void startProduceGramsViaUdp() {
-
-
-  }
 
 }

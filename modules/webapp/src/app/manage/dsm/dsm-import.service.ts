@@ -4,9 +4,9 @@ import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 import {catchError, map, tap} from 'rxjs/operators';
 
-import {Asxgram} from "./model/asxgram";
+import {FieGram} from "./fie-gram";
 import {NzMessageService} from "ng-zorro-antd";
-import {Asxresult} from "./model/asxresult";
+import {FdsResult} from "../result/fds-result";
 import {ErrorObservable} from "rxjs/observable/ErrorObservable";
 
 const httpOptions = {
@@ -14,24 +14,24 @@ const httpOptions = {
 };
 
 @Injectable()
-export class DataimportService {
+export class DsmImportService {
 
-  private asxgramsUrl = 'http://localhost:8080/asxgram';  // URL to web api
+  private fieGramsUrl = 'http://localhost:8080/fieGram';  // URL to web api
   constructor(
     private http: HttpClient,
     private _message: NzMessageService) {
   }
 
 
-  add(asxgram: Asxgram): Observable<Asxresult<Asxgram>> {
-    return this.http.post<Asxgram>(this.asxgramsUrl + "/add", asxgram, httpOptions).pipe(
+  add(asxgram: FieGram): Observable<FdsResult<FieGram>> {
+    return this.http.post<FieGram>(this.fieGramsUrl + "/add", asxgram, httpOptions).pipe(
       catchError(this.handleError)
     );
 
   }
 
-  addAll(asxgrams: Asxgram[]): Observable<Asxresult<Asxgram[]>> {
-    return this.http.post<Asxgram[]>(this.asxgramsUrl + "/addAll", asxgrams, httpOptions).pipe(
+  addAll(fieGrams: FieGram[]): Observable<FdsResult<FieGram[]>> {
+    return this.http.post<FieGram[]>(this.fieGramsUrl + "/addAll", fieGrams, httpOptions).pipe(
       catchError(this.handleError)
     );
   }
@@ -52,8 +52,8 @@ export class DataimportService {
       'Something bad happened; please try again later.');
   };
 
-  /** Log a DataimportService message with the MessageService */
+  /** Log a DsmImportService message with the MessageService */
   private log(message: string) {
-    this._message.info('DataimportService: ' + message);
+    this._message.info('DsmImportService: ' + message);
   }
 }

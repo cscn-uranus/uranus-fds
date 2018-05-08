@@ -1,4 +1,4 @@
-package com.cscn.uranus.fds.fie.eip.endpoint.entity.type;
+package com.cscn.uranus.fds.fie.job.entity.type;
 
 public enum FieEndpointType {
   UDP_CLIENT("UdpOut"),

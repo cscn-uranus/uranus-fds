@@ -26,16 +26,12 @@ public class FieScheduler {
     }
   }
 
-  public Scheduler getScheduler() {
-    return scheduler;
-  }
-
-
   public void scheduleJob(JobDetail job, Trigger trigger) {
     try {
       this.scheduler.scheduleJob(job,trigger);
     } catch (SchedulerException e) {
       e.printStackTrace();
+      _logger.error("AsxScheduler添加任务错误！");
     }
   }
 

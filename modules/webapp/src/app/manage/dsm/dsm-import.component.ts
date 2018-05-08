@@ -1,21 +1,21 @@
 import {Component, OnInit} from '@angular/core';
-import {Asxgram} from "./model/asxgram";
+import {FieGram} from "./fie-gram";
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
-import {DataimportService} from "./dataimport.service";
+import {DsmImportService} from "./dsm-import.service";
 import {NzMessageService} from "ng-zorro-antd";
-import {Asxresult} from "./model/asxresult";
+import {FdsResult} from "../result/fds-result";
 
 @Component({
-  templateUrl: './dataimport.component.html',
-  styleUrls: ['./dataimport.component.scss']
+  templateUrl: './dsm-import.component.html',
+  styleUrls: ['./dsm-import.component.scss']
 })
-export class DataimportComponent implements OnInit {
+export class DsmImportComponent implements OnInit {
 
-  public static path = 'dataimport';
+  public static path = 'dsm-import';
   public static title = '数据导入';
   public static description = '导入数据源数据';
 
-  public asxgrams: Asxgram[];
+  public fieGrams: FieGram[];
 
   gramsForm: FormGroup;
 
@@ -56,7 +56,7 @@ export class DataimportComponent implements OnInit {
         break;
       }
       case 2: {
-        this.addAll(this.asxgrams);
+        this.addAll(this.fieGrams);
         break;
       }
       default: {
@@ -65,7 +65,7 @@ export class DataimportComponent implements OnInit {
     }
   }
 
-  constructor(private fb: FormBuilder, private maintService: DataimportService, private _message: NzMessageService) {
+  constructor(private fb: FormBuilder, private dsmImportService: DsmImportService, private _message: NzMessageService) {
     this.createForm();
   }
 
@@ -84,16 +84,16 @@ export class DataimportComponent implements OnInit {
     if (!content) {
       return;
     }
-    this.maintService.add({content} as Asxgram).subscribe();
+    this.dsmImportService.add({content} as FieGram).subscribe();
   }
 
-  public addAll(asxgrams: Asxgram[]): void {
+  public addAll(asxgrams: FieGram[]): void {
     if (!asxgrams) {
       return;
     }
-    let result: Asxresult<Asxgram[]> = new Asxresult<Asxgram[]>();
-    this.maintService.addAll(asxgrams)
-    .subscribe((result: Asxresult<Asxgram[]>) => {
+    let result: FdsResult<FieGram[]> = new FdsResult<FieGram[]>();
+    this.dsmImportService.addAll(asxgrams)
+    .subscribe((result: FdsResult<FieGram[]>) => {
       result = {...result}
       this._message.info(result.description);
       }
@@ -106,17 +106,17 @@ export class DataimportComponent implements OnInit {
   public resolveAsxgramDom(text: string): void {
     let regex = new RegExp('ZCZC[\\s\\S]*?NNNN', 'g');
     let result;
-    this.asxgrams = [];
+    this.fieGrams = [];
     while ((result = regex.exec(text)) !== null) {
       let asxgramDom: string = result[0];
       let length = asxgramDom.length;
-      let asxgram: Asxgram = new Asxgram();
+      let asxgram: FieGram = new FieGram();
 
       // asxgram.orderNum = this.index;
       asxgram.header = asxgramDom.substr(0, 4);
       asxgram.content = asxgramDom.substr(4, length - 8);
       asxgram.tail = asxgramDom.substr(length - 4, 4);
-      this.asxgrams.push(asxgram);
+      this.fieGrams.push(asxgram);
     }
   }
 }
