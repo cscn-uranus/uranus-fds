@@ -1,5 +1,1 @@
-include 'modules/core'
-include 'modules/fie'
-include 'modules/eip'
-
-rootProject.name = 'uranus-fds'
+rootProject.name = 'uranus-fds-fie'

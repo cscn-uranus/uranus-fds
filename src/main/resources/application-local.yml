@@ -7,18 +7,12 @@ uranus:
 
 # Active MQ
 spring:
-  activemq:
-    broker-url: tcp://${uranus.fds.host}:61616
-    user: admin
-    password: admin
-    in-memory: false
-    pool:
-      enabled: false
   jpa:
     hibernate:
       ddl-auto: update
+    show-sql: false
   datasource:
     url: jdbc:mysql://${uranus.fds.host}:3306/uranus_fds?useUnicode=true&characterEncoding=utf-8&useSSL=false
     username: root
-    password: Mf#llsy78g
+    password: Nd@kkat67f
 
