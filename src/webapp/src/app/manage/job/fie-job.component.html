@@ -1,0 +1,21 @@
+<nz-list [nzDataSource]="result.data" [nzRenderItem]="item" [nzGrid]="{gutter: 16, span: 6}">
+  <ng-template #item let-item>
+    <nz-list-item [nzContent]="nzContent">
+      <ng-template #nzContent>
+        <nz-card [nzTitle]="item.name">
+            <p>{{item.cronExpression}}</p>
+            <nz-button-group>
+              <button nz-button [nzType]="'default'">
+                <span>启动</span>
+              </button>
+              <button nz-button [nzType]="'default'" disabled>
+                <span>停止</span>
+              </button>
+            </nz-button-group>
+
+        </nz-card>
+      </ng-template>
+    </nz-list-item>
+  </ng-template>
+</nz-list>
+

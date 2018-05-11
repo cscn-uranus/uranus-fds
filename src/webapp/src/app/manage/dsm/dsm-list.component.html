@@ -1,0 +1,15 @@
+<nz-list [nzDataSource]="data" [nzRenderItem]="item" [nzGrid]="{gutter: 16, span: 6}">
+  <ng-template #item let-item>
+    <nz-list-item [nzContent]="nzContent">
+      <ng-template #nzContent>
+        <nz-card [nzTitle]="item.title" [nzExtra]="extraTemplate">
+          MH/t 4029.3自动化间飞行数据交换
+        </nz-card>
+        <ng-template #extraTemplate>
+          <a routerLink="dsm-import">导入数据</a>
+        </ng-template>
+      </ng-template>
+    </nz-list-item>
+  </ng-template>
+</nz-list>
+<router-outlet></router-outlet>

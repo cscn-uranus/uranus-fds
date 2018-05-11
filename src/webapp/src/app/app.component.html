@@ -1,0 +1,14 @@
+<div class="logo"></div>
+<ul nz-menu [nzMode]="'horizontal'">
+  <li nz-menu-item *ngFor="let menu of menus">
+    <a  routerLink="{{menu.url}}"><i class="anticon anticon-appstore"></i> {{menu.title}}</a>
+
+  </li>
+</ul>
+<nz-content>
+
+  <nz-layout>
+    <router-outlet></router-outlet>
+  </nz-layout>
+
+</nz-content>
